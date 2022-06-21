@@ -1,47 +1,32 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
+import React from "react";
+import { Link } from "react-router-dom";
+import { pluralize } from "../../utils/helpers"
 
-import ProductItem from '../ProductItem';
-import { QUERY_PRODUCTS } from '../../utils/queries';
-import spinner from '../../assets/spinner.gif';
-
-function ProductList({ currentCategory }) {
-  const { loading, data } = useQuery(QUERY_PRODUCTS);
-
-  const products = data?.products || [];
-
-  function filterProducts() {
-    if (!currentCategory) {
-      return products;
-    }
-
-    return products.filter(
-      (product) => product.category._id === currentCategory
-    );
-  }
+function ProductItem(item) {
+  const {
+    image,
+    name,
+    _id,
+    price,
+    quantity
+  } = item;
 
   return (
-    <div className="my-2">
-      <h2>Our Products:</h2>
-      {products.length ? (
-        <div className="flex-row">
-          {filterProducts().map((product) => (
-            <ProductItem
-              key={product._id}
-              _id={product._id}
-              image={product.image}
-              name={product.name}
-              price={product.price}
-              quantity={product.quantity}
-            />
-          ))}
-        </div>
-      ) : (
-        <h3>You haven't added any products yet!</h3>
-      )}
-      {loading ? <img src={spinner} alt="loading" /> : null}
+    <div className="card px-1 py-1">
+      <Link to={`/products/${_id}`}>
+        <img
+          alt={name}
+          src={`/images/${image}`}
+        />
+        <p>{name}</p>
+      </Link>
+      <div>
+        <div>{quantity} {pluralize("item", quantity)} in stock</div>
+        <span>${price}</span>
+      </div>
+      <button>Add to cart</button>
     </div>
   );
 }
 
-export default ProductList;
+export default ProductItem;

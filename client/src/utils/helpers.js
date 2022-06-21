@@ -4,3 +4,4 @@ export function pluralize(name, count) {
   }
   return name + 's'
 }
+
